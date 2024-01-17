@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.util.List;
 
 import javax.servlet.GenericServlet;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -26,41 +27,35 @@ public class LoginServlet extends HttpServlet {
 		StudentDao dao = new StudentDao();
 
 		List<Student> list = dao.getAllStudents();
-        boolean value=false;
-		String studentPassword=null;
-		
-		for(Student student:list) {
-			if(email.equals(student.getEmail())) {
-				value=true;
-				studentPassword=student.getPassword();
+		boolean value = false;
+		String studentPassword = null;
+
+		for (Student student : list) {
+			if (email.equals(student.getEmail())) {
+				value = true;
+				studentPassword = student.getPassword();
 				break;
 			}
 		}
-		
-		PrintWriter printWriter=resp.getWriter();
-		if(value) {
+
+		PrintWriter printWriter = resp.getWriter();
+		if (value) {
 //			value=true;
 //			email is present in the database
-			if(password.equals(studentPassword)) {
+			if (password.equals(studentPassword)) {
 //				login success
-				printWriter.print("LOGIN SUCCESS");
-			}else {
-				printWriter.print("Invalid Password");
+				resp.sendRedirect("https://trainer.qspiders.com/trainer-home");
+			} else {
+				RequestDispatcher dispatcher = req.getRequestDispatcher("login.html");
+				dispatcher.include(req, resp);
 			}
-			
-		}else {
+
+		} else {
 //			value=false
-		printWriter.print("Invalid Email");
+			RequestDispatcher dispatcher = req.getRequestDispatcher("login.html");
+			dispatcher.include(req, resp);
 		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
+
 	}
 
 }
